@@ -1,19 +1,14 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 import time
 
 hostName = "localhost"
 port = 8080
 
-class MyServer(BaseHTTPRequestHandler):
+class MyServer(SimpleHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
-        self.wfile.write(bytes("<html><head><title>Basic Server</title></head>", "utf-8"))
-        self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
-        self.wfile.write(bytes("<body>", "utf-8"))
-        self.wfile.write(bytes("<p>This is an example web server.</p>", "utf-8"))
-        self.wfile.write(bytes("</body></html>", "utf-8"))
+        if self.path == "/":
+            self.path = "test.html"
+        return SimpleHTTPRequestHandler.do_GET(self)
 
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
